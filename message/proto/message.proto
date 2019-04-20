@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+import "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
+
+package message;
+
+service MessageService {
+    
+    rpc Create(CreateReq) returns (Message) {}
+
+    rpc Get(GetReq) returns (Message) {}
+
+    rpc Delete(DeleteReq) returns (DeleteResp) {}
+
+    rpc Find(FindReq) returns (FindResp) {}
+
+    rpc CountFind(FindReq) returns (CountFindResp) {}
+
+    rpc Publish(PublishReq) returns (PublishResult) {}
+    
+    rpc FindPublish(FindPublishReq) returns (FindPublishResp) {}
+}
+
+message Message {
+    int64 id = 1;
+    string srv = 2;
+    string event = 3;
+    bytes  data = 4;
+    google.protobuf.Timestamp created_at = 5;
+    bool active = 6;
+}
+
+message CreateReq {
+    string srv = 1;
+    string event = 2;
+    bytes  data = 3;
+}
+
+message GetReq {
+    int64 id = 1;
+}
+
+message DeleteReq {
+    int64 id = 1;
+}
+
+message DeleteResp {
+    bool value = 1;
+}
+
+message FindReq {
+    int64 id = 1;
+    string srv = 2;
+    string event = 3;
+    string data = 4;
+    google.protobuf.Timestamp created_from = 5;
+    google.protobuf.Timestamp created_to = 6;
+    string active = 7;
+    int64 limit = 8;
+    int64 offset = 9;
+}
+
+message FindResp {
+    repeated Message messages = 1;
+}
+
+message CountFindResp {
+    int64 total = 1;
+}
+
+message PublishReq {
+    int64 msg_id = 1;
+}
+
+message PublishResult {
+    int64 id = 1;
+    int64 msg_id = 2;
+    google.protobuf.Timestamp ts = 3;
+}
+
+message FindPublishReq {
+    int64 id = 1;
+    int64 msg_id = 2;
+}
+
+message FindPublishResp {
+    repeated PublishResult results = 1;
+}
+
+
