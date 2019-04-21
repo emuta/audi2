@@ -89,6 +89,7 @@ func (s *Repository) AuthLogin(ctx context.Context, name, passwd, device, ip, fp
 				"name": name,
 				"password": passwd,
 			}).Error("Failed to validate user password on login")
+			ch <- err
 			return
 		}
 
