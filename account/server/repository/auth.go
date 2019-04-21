@@ -38,7 +38,14 @@ func parseToken (val string, key string) (interface{}, error) {
             return []byte(key), nil
         })
     if err != nil {
+
+    	log.WithError(err).WithFields(log.Fields{
+    		"val": val,
+    		"key": key,
+    	}).Errorf("Failed to parse token. %#v \n", err)
+
         return nil, err
+    	
     }
 
     if claims, ok := token.Claims.(*jwt.StandardClaims); ok && token.Valid {
@@ -132,16 +139,19 @@ func (s *Repository) AuthLogout(ctx context.Context, signature string) (error) {
 
 		authId, err := parseToken(signature, config.TOKEN_SECRET)
 		if err != nil {
+
+			log.WithError(err).Error("Failed to test pass token")
+
 			ch <- err
 			return
 		}
 
-		if err := s.db.Model(&model.AuthToken{}).
-				Where("auth_id = ?", authId).
+		if err := s.db.Take(&model.AuthToken{}, "auth_id = ?", authId ).
 				Update("active = ?", false).Error; err != nil {
 			ch <- err
 			return
 		}
+		log.Info(authId)
 		ch <- nil
 	}()
 	select {
@@ -373,7 +383,7 @@ func (s *Repository) InactiveAuthToken(ctx context.Context, id int64) error {
 	ch := make(chan error)
 	func () {
 		defer close(ch)
-		ch <- s.db.Model(&model.AuthToken{Id: id}).Update("active = ?", false).Error
+		ch <- s.db.Take(&model.AuthToken{}, "id = ?", id).Update("active = ?", false).Error
 	}()
 
 	select {
