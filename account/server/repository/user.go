@@ -339,7 +339,7 @@ func (s *Repository) UpdateUserActive(ctx context.Context, id int64, active bool
             return
         }
 
-        if err := tx.Model(&user).Update("active", active).Error; err != nil {
+        if err := tx.Model(&user).Updates(map[string]interface{}{"active": active}).Error; err != nil {
             log.WithError(err).Error("Fail to Ban user")
             ch <- err
             return 
