@@ -27,10 +27,12 @@ func failOnError(err error, msg string) {
 func init() {
 	flag.StringVar(&brokerURL, "broker", "amqp://guest:guest@rabbitmq:5672/", "The broker url for RabbitMQ connect")
 	flag.StringVar(&exchangeName, "exchange", "pubsub", "The exchange name of RabbitMQ used")
+	flag.StringVar(&queueName, "queue", "queue", "The exchange name of RabbitMQ used")
+	flag.StringVar(&routingKey, "routing", "routing", "The exchange name of RabbitMQ used")
 	flag.Parse()
 
-	queueName = fmt.Sprintf("%s.monitor.queue", exchangeName)
-	routingKey = fmt.Sprintf("%s.monitor.route", exchangeName)
+	queueName = fmt.Sprintf("%s.monitor.%s", exchangeName, queueName)
+	routingKey = fmt.Sprintf("%s.monitor.%s", exchangeName, routingKey)
 }
 
 func watchConnection(conn *amqp.Connection) {
