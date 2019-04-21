@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 
 	_ "audi/pkg/logger"
 	log "github.com/sirupsen/logrus"
@@ -13,9 +12,6 @@ import (
 var (
 	brokerURL    string
 	exchangeName string
-
-	queueName  string
-	routingKey string
 )
 
 func failOnError(err error, msg string) {
@@ -27,12 +23,7 @@ func failOnError(err error, msg string) {
 func init() {
 	flag.StringVar(&brokerURL, "broker", "amqp://guest:guest@rabbitmq:5672/", "The broker url for RabbitMQ connect")
 	flag.StringVar(&exchangeName, "exchange", "pubsub", "The exchange name of RabbitMQ used")
-	flag.StringVar(&queueName, "queue", "queue", "The exchange name of RabbitMQ used")
-	flag.StringVar(&routingKey, "routing", "routing", "The exchange name of RabbitMQ used")
 	flag.Parse()
-
-	queueName = fmt.Sprintf("%s.monitor.%s", exchangeName, queueName)
-	routingKey = fmt.Sprintf("%s.monitor.%s", exchangeName, routingKey)
 }
 
 func watchConnection(conn *amqp.Connection) {
@@ -84,7 +75,7 @@ func main() {
 	log.Infof("[RabbitMQ] Declared a [%s] exchange -> %s", amqp.ExchangeFanout, exchangeName)
 
 	q, err := ch.QueueDeclare(
-		queueName, // queue name
+		"", // queue name
 		true,      // durable
 		false,     //delete when unused
 		false,     // exclusive
@@ -93,18 +84,14 @@ func main() {
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	log.Infof("[RabbitMQ] Declared a queue -> %s", queueName)
-
 	err = ch.QueueBind(
 		q.Name,       // queue name
-		routingKey,   // routing key
+		"",           // routing key
 		exchangeName, // exchange name
 		false,
 		nil,
 	)
 	failOnError(err, "Failed to bind a queue")
-
-	log.Infof("[RabbitMQ] Bind queue with routingKey -> %s", routingKey)
 
 	msgs, err := ch.Consume(
 		q.Name, // queue
