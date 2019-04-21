@@ -90,8 +90,8 @@ func (p *Publisher) Publish(appId, tp string, payload interface{}) error {
 		log.WithError(err).WithFields(log.Fields{
 			"MessageId": uidStr,
 			"AppId": appId,
-		    "type":  tp,
-		    "Body":  string(body),
+			"type":  tp,
+			"Body":  string(body),
 		}).Error("Failed to publish event")
 	}
 	return err
