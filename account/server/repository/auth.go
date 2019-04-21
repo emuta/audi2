@@ -292,9 +292,7 @@ func getFindAuthTokenDB(db *gorm.DB, args map[string]interface{}) *gorm.DB {
 	}
 
 	if userName, ok := args["user_name"]; ok {
-	    tx = tx.Where("user_name in (?)", db.Model(&model.User{}).
-	    										Select("name").
-	    										Where("name = ?", userName).QueryExpr())
+	    tx = tx.Where("user_name = ?", userName)
 	}
 
 	if createdFrom, ok := args["created_from"]; ok {
