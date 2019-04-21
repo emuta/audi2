@@ -111,6 +111,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		h.Error(w, err, 401)
+		return
 	}
 
 	h.WriteJson(w, resp)
@@ -119,9 +120,15 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var req pb.LogoutReq
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.WithError(err).Error("Failed to encode response")
+		log.Errorf("%#v \n", err)
+		h.Error(w, err, 500)
+	}
 	resp, err := accountServiceClient.Logout(r.Context(), &req)
 	if err != nil {
 		h.Error(w, err, 400)
+		return
 	}
 	h.WriteJson(w, resp)
 }
