@@ -121,7 +121,7 @@ func (s *Repository) AuthLogin(ctx context.Context, name, passwd, device, ip, fp
 	        return nil, err
 	    }
 	}
-	return &token, nil
+	return &token, tx.Commit().Error
 
 }
 
