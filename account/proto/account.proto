@@ -1,0 +1,260 @@
+syntax = "proto3";
+
+package account;
+
+import "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
+
+service AccountService {
+
+    // role
+    rpc GetRole(GetRoleReq) returns (Role) {}
+
+    rpc FindRole(FindRoleReq) returns (FindRoleResp) {}
+
+    // user
+    rpc CreateUser(CreateUserReq) returns (User) {}
+
+    rpc GetUser(GetUserReq) returns (User) {}
+
+    rpc ValidateUserPassword(ValidateUserPasswordReq) returns (ValidateUserPasswordResp) {}
+
+    rpc FindUser(FindUserReq) returns (FindUserResp) {}
+
+    rpc CountFindUser(FindUserReq) returns (CountFindUserResp) {}
+
+    rpc ChangeUserPassword(ChangeUserPasswordReq) returns (ChangeUserPasswordResp) {}
+
+    rpc UpdateUserRole(UpdateUserRoleReq) returns (UpdateUserRoleResp) {}
+
+    rpc BanUser(BanUserReq) returns (BanUserResp) {}
+
+    rpc UnBanUser(UnBanUserReq) returns (UnBanUserResp) {}
+
+    // auth
+    rpc Login(LoginReq) returns (LoginResp) {}
+
+    rpc Logout(LogoutReq) returns (LogoutResp) {}
+
+    // auth history
+    rpc GetAuthHistory(GetAuthHistoryReq) returns (AuthHistory) {}
+
+    rpc FindAuthHistory(FindAuthHistoryReq) returns (FindAuthHistoryResp) {}
+
+    rpc CountFindAuthHistory(FindAuthHistoryReq) returns (CountFindAuthHistoryResp) {}
+
+    // auth token
+    rpc GetAuthToken(GetAuthTokenReq) returns (AuthToken) {}
+
+    rpc FindAuthToken(FindAuthTokenReq) returns (FindAuthTokenResp) {}
+
+    rpc CountFindAuthToken(FindAuthTokenReq) returns (CountFindAuthTokenResp) {}
+
+    rpc InactiveAuthToken(InactiveAuthTokenReq) returns (InactiveAuthTokenResp) {}
+
+    rpc ParseAuthToken(ParseAuthTokenReq) returns (AuthToken) {}
+}
+
+message Role {
+    int32 id = 1;
+    string name = 2;
+}
+
+message GetRoleReq {
+    int32 id = 1;
+    string name = 2;
+}
+
+message FindRoleReq {
+    int32 id = 1;
+    string name = 2;
+}
+
+message FindRoleResp {
+    repeated Role roles = 1;
+}
+
+message User {
+    int64 id = 1;
+    string name = 2;
+    bool active = 3;
+    int32 role_id = 4;
+    google.protobuf.Timestamp join_at = 5;
+}
+
+message CreateUserReq {
+    string name = 1;
+    string password = 2;
+    int32  role_id = 3;
+}
+
+message GetUserReq {
+    int64 id = 1;
+    string name = 2;
+}
+
+message ValidateUserPasswordReq {
+    string name = 1;
+    string password = 2;
+}
+
+message ValidateUserPasswordResp {
+    int64 id = 1;
+    bool valid = 2;
+}
+
+message FindUserReq {
+    int64 id = 1;
+    string name = 2;
+    string active = 3;
+    int32 role_id = 4;
+    google.protobuf.Timestamp join_from = 5;
+    google.protobuf.Timestamp join_to = 6;
+    int32 limit = 7;
+    int32 offset = 8;
+}
+
+message FindUserResp {
+    repeated User users = 2;
+}
+
+message CountFindUserResp {
+    int64 total = 1;
+}
+
+message UpdateUserRoleReq {
+    int64 id = 1;
+    int32 role_id = 2;
+}
+
+message UpdateUserRoleResp {
+    bool value = 1;
+}
+
+message ChangeUserPasswordReq {
+    int64 id = 1;
+    string old_password = 3;
+    string new_password = 4;
+}
+
+message ChangeUserPasswordResp {
+    bool value = 1;
+}
+
+message BanUserReq {
+    int64 id = 1;
+}
+
+message BanUserResp {
+    bool value = 1;
+}
+
+message UnBanUserReq {
+    int64 id = 1;
+}
+
+message UnBanUserResp {
+    bool value = 1;
+}
+
+message LoginReq {
+    string username = 1;
+    string password = 2;
+    string device = 3;
+    string ip = 4;
+    string fp = 5;
+}
+
+message LoginResp {
+    string signature = 1;
+}
+
+message LogoutReq {
+    string signature = 1;
+}
+
+message LogoutResp {
+    bool success = 1;
+}
+
+message AuthHistory {
+    int64 id = 1;
+    int64 user_id = 2;
+    string ip = 3;
+    string device = 4;
+    string fp = 5;
+    google.protobuf.Timestamp created_at = 6;
+}
+
+message GetAuthHistoryReq {
+    int64 id = 1;
+}
+
+message FindAuthHistoryReq {
+    int64 id = 1;
+    int64 user_id = 2;
+    string ip = 3;
+    string device = 4;
+    string fp = 5;
+    google.protobuf.Timestamp created_from = 6;
+    google.protobuf.Timestamp created_to = 7;
+    int32 limit = 8;
+    int32 offset = 9;
+}
+
+message FindAuthHistoryResp {
+    repeated AuthHistory histories = 1;
+}
+
+message CountFindAuthHistoryResp {
+    int64 total = 1;
+}
+
+message AuthToken {
+    int64 id = 1;
+    int64 auth_id = 2;
+    int64 user_id = 3;
+    string user_name = 4;
+    string signature = 5;
+    bool active = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp expired_at = 8;
+}
+
+message GetAuthTokenReq {
+    int64 id = 1;
+}
+
+message FindAuthTokenReq {
+    int64 id = 1;
+    int64 auth_id = 2;
+    int64 user_id = 3;
+    string user_name = 4;
+    string signature = 5;
+    string active = 6;
+    google.protobuf.Timestamp created_from = 7;
+    google.protobuf.Timestamp created_to = 8;
+    google.protobuf.Timestamp expired_from = 9;
+    google.protobuf.Timestamp expired_to = 10;
+    int32 limit = 11;
+    int32 offset = 12;
+}
+
+message FindAuthTokenResp {
+    repeated AuthToken tokens = 1;
+}
+
+message CountFindAuthTokenResp {
+    int64 total = 1;
+}
+
+message InactiveAuthTokenReq {
+    int64 id = 1;
+}
+
+message InactiveAuthTokenResp {
+    bool success = 1;
+}
+
+message ParseAuthTokenReq {
+    string signature = 1;
+}
