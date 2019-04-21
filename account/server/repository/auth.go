@@ -133,6 +133,7 @@ func (s *Repository) AuthLogin(ctx context.Context, name, passwd, device, ip, fp
 }
 
 func (s *Repository) AuthLogout(ctx context.Context, signature string) (error) {
+	tx := s.db.Begin().Set("gorm:query_option", "for update")
 	ch := make(chan error)
 	go func() {
 		defer close(ch)
@@ -146,23 +147,21 @@ func (s *Repository) AuthLogout(ctx context.Context, signature string) (error) {
 			return
 		}
 
-		if err := s.db.Take(&model.AuthToken{}, "auth_id = ?", authId ).
-				Update("active = ?", false).Error; err != nil {
-			ch <- err
-			return
-		}
-		log.Info(authId)
-		ch <- nil
+		ch <- tx.Take(&model.AuthToken{}, "auth_id = ?", authId).Updates(map[string]interface{}{"active": false}).Error
+		
 	}()
 	select {
 	case <-ctx.Done():
+		tx.Rollback()
 	    return ctx.Err()
 	case err := <- ch:
 	    if err != nil {
+	    	tx.Rollback()
 	        return err
 	    }
+
 	}
-	return nil
+	return tx.Commit().Error
 }
 
 func (s *Repository) GetAuthHistory(ctx context.Context, id int64) (*model.AuthHistory, error) {
@@ -191,11 +190,9 @@ func getFindAuthHistoryDB(db *gorm.DB, args map[string]interface{}) (tx *gorm.DB
 	    tx = tx.Where("user_id = ?", userId)
 	}
 
-	/*
 	if userName, ok := args["user_name"]; ok {
 	    tx = tx.Where("user_id in (?)", tx.Model(&model.User{}).Select("id").Where("name = ?", userName).QueryExpr())
 	}
-	*/
 
 	if device, ok := args["device"]; ok {
 	    tx = tx.Where("device = ?", device)
@@ -380,17 +377,20 @@ func (s *Repository) CountFindAuthToken(ctx context.Context, args map[string]int
 }
 
 func (s *Repository) InactiveAuthToken(ctx context.Context, id int64) error {
+	tx := s.db.Begin().Set("gorm:query_option", "for update")
 	ch := make(chan error)
 	func () {
 		defer close(ch)
-		ch <- s.db.Take(&model.AuthToken{}, "id = ?", id).Update("active = ?", false).Error
+		ch <- tx.Take(&model.AuthToken{Id: id}).Updates(map[string]interface{}{"active": false}).Error
 	}()
 
 	select {
 	case <-ctx.Done():
+		tx.Rollback()
 	    return ctx.Err()
 	case err := <- ch:
 	    if err != nil {
+	    	tx.Rollback()
 	        return err
 	    }
 	}
