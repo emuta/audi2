@@ -539,7 +539,7 @@ func (s *cqsscServiceServer) RevokeBetPlan(ctx context.Context, req *pb.RevokeBe
     }).Info("Bet plan revoked")
 
     // should publish evet
-    go s.broker.Publish("bet.plan.settled", stats)
+    go s.broker.Publish("bet.plan.revoked", stats)
     // refund payment
     // revoke bonus
     // revoke rebate
