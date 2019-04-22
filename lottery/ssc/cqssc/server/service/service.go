@@ -521,6 +521,7 @@ func (s *cqsscServiceServer) SettleBetPlan(ctx context.Context, req *pb.SettleBe
     }).Info("Bet plan settled")
     
     // should publish event
+    go s.broker.Publish("bet.plan.settled", stats)
     // assign bonus
     // assign rebate
 
@@ -538,6 +539,7 @@ func (s *cqsscServiceServer) RevokeBetPlan(ctx context.Context, req *pb.RevokeBe
     }).Info("Bet plan revoked")
 
     // should publish evet
+    go s.broker.Publish("bet.plan.settled", stats)
     // refund payment
     // revoke bonus
     // revoke rebate
