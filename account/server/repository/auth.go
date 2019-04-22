@@ -343,7 +343,7 @@ func (s *Repository) FindAuthToken(ctx context.Context, args map[string]interfac
 	go func() {
 		defer close(ch)
 		tx := getFindAuthTokenDB(s.db, args)
-		ch <- tx.Find(&result).Error
+		ch <- tx.Order("id DESC").Find(&result).Error
 	}()
 
 	select {
