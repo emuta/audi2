@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package cqssc;
+
+service Formula {
+
+    rpc Validate(ValidateReq) returns (ValidateResp) {}
+
+    rpc Compute(ComputeReq) returns(ComputeResp) {}
+
+}
+
+message ValidateReq {
+    string tag = 1;
+    repeated string code = 2;
+}
+
+message ValidateResp {
+    int32 num = 1;
+}
+
+message ComputeReq {
+    string tag = 1;
+    repeated string code = 2;
+    repeated string result = 3;
+}
+
+message ComputeResp {
+    int32 num = 1;
+}
