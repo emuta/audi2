@@ -1,0 +1,501 @@
+syntax = "proto3";
+
+package cqssc;
+
+import "google/api/annotations.proto";
+import "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
+
+service CqsscService {
+
+    rpc GetConfig(GetConfigReq) returns (Config) {
+        option (google.api.http) = {
+            get: "/config"
+        };
+    }
+
+    rpc UpdateConfig(UpdateConfigReq) returns (Config) {
+        option (google.api.http) = {
+            patch: "/config"
+            body: "*"
+        };
+    }
+
+    //
+    rpc GetUnit(GetUnitReq) returns (Unit) {
+        option (google.api.http) = {
+            get: "/units/{id}"
+        };
+    }
+
+    rpc FindUnit(FindUnitReq) returns (FindUnitResp) {
+        option (google.api.http) = {
+            get: "/units"
+        };
+    }
+
+    //
+    rpc GetCatg(GetCatgReq) returns (Catg) {
+        option (google.api.http) = {
+            get: "/catgs/{id}"
+        };
+    }
+
+    rpc FindCatg(FindCatgReq) returns (FindCatgResp) {
+        option (google.api.http) = {
+            get: "/catgs"
+        };
+    }
+
+    //
+    rpc GetGroup(GetGroupReq) returns (Group) {
+        option (google.api.http) = {
+            get: "/groups/{id}"
+        };
+    }
+
+    rpc FindGroup(FindGroupReq) returns (FindGroupResp) {
+        option (google.api.http) = {
+            get: "/groups"
+        };
+    }
+
+    //
+    rpc GetPlay(GetPlayReq) returns (Play) {
+        option (google.api.http) = {
+            get: "/plays/{id}"
+        };
+    }
+
+    rpc FindPlay(FindPlayReq) returns (FindPlayResp) {
+        option (google.api.http) = {
+            get: "/plays"
+        };
+    }
+
+    rpc UpdatePlay(UpdatePlayReq) returns (Play) {
+        option (google.api.http) = {
+            patch: "/plays"
+            body: "*"
+        };
+    }
+
+    //
+    rpc CreateTerm(CreateTermReq) returns (Term) {
+        option (google.api.http) = {
+            post: "/terms"
+            body: "*"
+        };
+    }
+
+    rpc GetTerm(GetTermReq) returns (Term) {
+        option (google.api.http) = {
+            get: "/terms/{id}"
+        };
+    }
+
+    rpc FindTerm(FindTermReq) returns (FindTermResp) {
+        option (google.api.http) = {
+            get: "/terms"
+        };
+    }
+
+    rpc CountFindTerm(FindTermReq) returns (CountFindTermResp) {}
+
+    rpc SetTermResult(SeTermtResultReq) returns (Term) {
+        option (google.api.http) = {
+            post: "/terms/{id}"
+            body: "*"
+        };
+    }
+
+    rpc UpdateTermResult(UpdateTermResultReq) returns (Term) {
+        option (google.api.http) = {
+            patch: "/terms/{id}"
+            body: "*"
+        };
+    }
+
+    rpc SettleTerm(SettleTermReq) returns (Term) {
+        option (google.api.http) = {
+            post: "/terms/{id}/settled"
+            body: "*"
+        };
+    }
+
+    rpc RevokeTerm(RevokeTermReq) returns (Term) {
+        option (google.api.http) = {
+            post: "/terms/{id}/revoked"
+            body: "*"
+        };
+    }
+
+    //
+    rpc CreateBet(CreateBetReq) returns (Bet) {
+        option (google.api.http) = {
+            post: "/bets"
+            body: "*"
+        };
+    }
+
+    rpc GetBet(GetBetReq) returns (Bet) {
+        option (google.api.http) = {
+            get: "/bets/{id}"
+        };
+    }
+
+    rpc FindBet(FindBetReq) returns (FindBetResp) {
+        option (google.api.http) = {
+            get: "/bets"
+        };
+    }
+
+    rpc CountFindBet(FindBetReq) returns (CountFindBetResp) {}
+
+    rpc GetBetStats(GetBetStatsReq) returns (GetBetStatsResp) {
+        option (google.api.http) = {
+            get: "/bets/{id}/stats"
+        };
+    }
+
+    rpc GetBetPlan(GetBetPlanReq) returns (BetPlan) {
+        option (google.api.http) = {
+            get: "/bets/{id}/plans"
+        };
+    }
+
+    rpc GetBetPlanStats(GetBetPlanStatsReq) returns (BetPlanStats) {
+        option (google.api.http) = {
+            get: "/bets/{id}/plans/{plan_id}/stats"
+        };
+    }
+
+    rpc SettleBetPlan(SettleBetPlanReq) returns (SettleBetPlanResp) {
+        option (google.api.http) = {
+            post: "/bets/{id}/plans/{plan_id}/settled"
+            body: "*"
+        };
+    }
+
+    rpc RevokeBetPlan(RevokeBetPlanReq) returns (RevokeBetPlanResp) {
+        option (google.api.http) = {
+            post: "/bets/{id}/plans/{plan_id}/revoked"
+            body: "*"
+        };
+    }
+
+}
+
+message Config {
+    int64 id = 1;
+    string name = 2;
+    string tag = 3;
+    double odds = 4;
+    double comm = 5;
+    double price = 6;
+    bool   active = 7;
+}
+
+message GetConfigReq {}
+
+message UpdateConfigReq {
+    int64 id = 1;
+    double odds = 2;
+    double comm = 3;
+}
+
+message Unit {
+    int64 id = 1;
+    string name = 2;
+    double value = 3;
+}
+
+message GetUnitReq {
+    int64 id = 1;
+}
+
+message FindUnitReq {
+    int64 id = 1;
+    string name = 2;
+    double value = 3;
+}
+
+message FindUnitResp {
+    repeated Unit units = 1;
+}
+
+message Catg {
+    int32 id = 1;
+    string name = 2;
+    string tag = 3;
+    bool pref = 4;
+}
+
+message GetCatgReq {
+    int32 id = 1;
+}
+
+message FindCatgReq {
+    int32 id = 1;
+    string name = 2;
+    string tag = 3;
+    string pref = 4;
+}
+
+message FindCatgResp {
+    repeated Catg catgs = 1;
+}
+
+message Group {
+    int32 id = 1;
+    string name = 2;
+    string tag = 3;
+}
+
+message GetGroupReq {
+    int32 id = 1;
+}
+
+message FindGroupReq {
+    int32 id = 1;
+    string name = 2;
+    string tag = 3;
+}
+
+message FindGroupResp {
+    repeated Group groups = 1;
+}
+
+message Play {
+    int32 id = 1;
+    string name = 2;
+    string tag = 3;
+    bool pref = 4;
+    bool active = 5;
+    int32 pr = 6;
+    int32 catg_id = 7;
+    int32 group_id = 8;
+    repeated int64 units = 9;
+}
+
+message GetPlayReq {
+    int32 id = 1;
+}
+
+message UpdatePlayReq {
+    int32 id = 1;
+    string pref = 2;
+    string active = 3;
+    repeated int64 units = 4;
+}
+
+message FindPlayReq {
+    int32 id = 1;
+    string name = 2;
+    string tag = 3;
+    string pref = 4;
+    string active = 5;
+    int32 pr = 6;
+    int32 catg_id = 7;
+    int32 group_id = 8;
+    int64 unit_id = 9;
+}
+
+message FindPlayResp {
+    repeated Play plays = 1;
+}
+
+message Term {
+    int64 id = 1;
+    google.protobuf.Timestamp start_from = 2;
+    google.protobuf.Timestamp end_to = 3;
+    google.protobuf.Timestamp opened_at = 4;
+    repeated string codes = 5;
+    google.protobuf.Timestamp settled_at = 6;
+    google.protobuf.Timestamp revoked_at = 7;
+}
+
+message CreateTermReq {
+    int64 id = 1;
+    google.protobuf.Timestamp start_from = 2;
+    google.protobuf.Timestamp end_to = 3;
+}
+
+message GetTermReq {
+    int64 id = 1;
+}
+
+message FindTermReq {
+    int64 id = 1;
+    string code = 2;
+    google.protobuf.Timestamp start_from = 3;
+    google.protobuf.Timestamp end_to = 4;
+    int32 limit = 5;
+    int32 offset = 6;
+    string order_by = 7;
+}
+
+message FindTermResp {
+    repeated Term terms = 1;
+}
+
+message CountFindTermResp {
+    int32 total = 1;
+}
+
+message SeTermtResultReq {
+    int64 id = 1;
+    repeated string codes = 2;
+}
+
+message UpdateTermResultReq {
+    int64 id = 1;
+    repeated string codes = 2;
+}
+
+message SettleTermReq {
+    int64 id = 1;
+}
+
+message RevokeTermReq {
+    int64 id = 1;
+}
+
+message Bet {
+    int64 id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    int64  user_id = 3;
+    // 赔率
+    double odds = 4;
+    int32  play_id = 5;
+    int64  unit_id = 6;
+    // 返点率
+    double comm = 7;
+    bool   chase_stop = 8;
+    repeated string codes = 9;
+    string title = 10;
+
+    repeated BetPlan plans = 11;
+    
+}
+
+message BetPlan {
+    int64 id = 1;
+    int64 bet_id = 2;
+    // 期号
+    int64 term_id = 3;
+    // 倍率
+    int64 times = 4;
+    // 投注数
+    int64 qty = 5;
+    // 应支付数额
+    double payment = 6;
+    // 返点总额, 结算即返还
+    double rebate = 7;
+    // 单注的奖金
+    double bonus = 8;
+
+    BetPlanStats Stats = 9;
+}
+
+message BetPlanStats {
+    int64 id = 1;
+    int64 bet_id = 2;
+    bool settled = 3;
+    google.protobuf.Timestamp settled_at = 4;
+    bool revoked = 5;
+    google.protobuf.Timestamp revoked_at = 6;
+    double payment = 7;
+    double Bonus = 8;
+    double rebate = 9;
+    int64  win = 10;
+}
+
+message CreateBetReq {
+    int64  user_id = 1;
+    double odds = 2;
+    bool   chase_stop = 3;
+    int32  play_id = 4;
+    double comm = 5;
+    int64  unit_id = 6;
+    repeated string codes = 7;
+    repeated BetPlan plans = 8;
+}
+
+message GetBetReq {
+    int64 id = 1;
+}
+
+message FindBetReq {
+    int64 user_id = 1;
+    int32 play_id = 2;
+    string code = 3;
+    google.protobuf.Timestamp created_from = 4;
+    google.protobuf.Timestamp created_to = 5;
+    int64 term_id = 6;
+    string win = 7;
+    string settled = 8;
+    string revoked = 9;
+
+    int32 limit = 14;
+    int32 offset = 15;
+}
+
+message FindBetResp {
+    repeated Bet bets = 1;
+}
+
+message CountFindBetResp {
+    int32 total = 1;
+}
+
+
+message GetBetStatsReq {
+    int64 id = 1;
+}
+
+message GetBetStatsResp {
+    repeated BetPlanStats stats = 1;
+}
+
+message GetBetPlanReq {
+    int64 id = 1;
+}
+
+message GetBetPlanStatsReq {
+    int64 id = 1;
+    int64 plan_id = 2;
+}
+
+message SettleBetPlanReq {
+    int64 id = 1;
+    int64 plan_id = 2;
+    int64 win = 3;
+}
+
+message SettleBetPlanResp {
+    bool success = 1;
+}
+
+message RevokeBetPlanReq {
+    int64 id = 1;
+    int64 plan_id = 2;
+}
+
+message RevokeBetPlanResp {
+    bool success = 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
