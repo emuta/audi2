@@ -2,54 +2,124 @@ syntax = "proto3";
 
 package account;
 
+import "google/api/annotations.proto";
 import "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
 
 service AccountService {
 
     // role
-    rpc GetRole(GetRoleReq) returns (Role) {}
+    rpc GetRole(GetRoleReq) returns (Role) {
+        option (google.api.http) = {
+            get: "/account/roles/{id}"
+        };
+    }
 
-    rpc FindRole(FindRoleReq) returns (FindRoleResp) {}
+    rpc FindRole(FindRoleReq) returns (FindRoleResp) {
+        option (google.api.http) = {
+            get: "/account/roles"
+        };
+    }
 
     // user
-    rpc CreateUser(CreateUserReq) returns (User) {}
+    rpc CreateUser(CreateUserReq) returns (User) {
+        option (google.api.http) = {
+            post: "/account/users"
+            body: "*"
+        };
+    }
 
-    rpc GetUser(GetUserReq) returns (User) {}
+    rpc GetUser(GetUserReq) returns (User) {
+        option (google.api.http) = {
+            get: "/account/users/{id}"
+        };
+    }
 
     rpc ValidateUserPassword(ValidateUserPasswordReq) returns (ValidateUserPasswordResp) {}
 
-    rpc FindUser(FindUserReq) returns (FindUserResp) {}
+    rpc FindUser(FindUserReq) returns (FindUserResp) {
+        option (google.api.http) = {
+            get: "/account/users"
+        };
+    }
 
     rpc CountFindUser(FindUserReq) returns (CountFindUserResp) {}
 
-    rpc ChangeUserPassword(ChangeUserPasswordReq) returns (ChangeUserPasswordResp) {}
+    rpc ChangeUserPassword(ChangeUserPasswordReq) returns (ChangeUserPasswordResp) {
+        option (google.api.http) = {
+            post: "/account/users/{id}/password"
+            body: "*"
+        };
+    }
 
-    rpc UpdateUserRole(UpdateUserRoleReq) returns (UpdateUserRoleResp) {}
+    rpc UpdateUserRole(UpdateUserRoleReq) returns (UpdateUserRoleResp) {
+        option (google.api.http) = {
+            post: "/account/users/{id}/role"
+            body: "*"
+        };
+    }
 
-    rpc BanUser(BanUserReq) returns (BanUserResp) {}
+    rpc BanUser(BanUserReq) returns (BanUserResp) {
+        option (google.api.http) = {
+            delete: "/account/users/{id}/active"
+        };
+    }
 
-    rpc UnBanUser(UnBanUserReq) returns (UnBanUserResp) {}
+    rpc UnBanUser(UnBanUserReq) returns (UnBanUserResp) {
+        option (google.api.http) = {
+            post: "/account/users/{id}/active"
+        };
+    }
 
     // auth
-    rpc Login(LoginReq) returns (LoginResp) {}
+    rpc Login(LoginReq) returns (LoginResp) {
+        option (google.api.http) = {
+            post: "/auth/login"
+            body: "*"
+        };
+    }
 
-    rpc Logout(LogoutReq) returns (LogoutResp) {}
+    rpc Logout(LogoutReq) returns (LogoutResp) {
+        option (google.api.http) = {
+            post: "/auth/logout"
+            body: "*"
+        };
+    }
 
     // auth history
-    rpc GetAuthHistory(GetAuthHistoryReq) returns (AuthHistory) {}
+    rpc GetAuthHistory(GetAuthHistoryReq) returns (AuthHistory) {
+        option (google.api.http) = {
+            get: "/auth/histories/{id}"
+        };
+    }
 
-    rpc FindAuthHistory(FindAuthHistoryReq) returns (FindAuthHistoryResp) {}
+    rpc FindAuthHistory(FindAuthHistoryReq) returns (FindAuthHistoryResp) {
+        option (google.api.http) = {
+            get: "/auth/histories"
+        };
+    }
 
     rpc CountFindAuthHistory(FindAuthHistoryReq) returns (CountFindAuthHistoryResp) {}
 
     // auth token
-    rpc GetAuthToken(GetAuthTokenReq) returns (AuthToken) {}
+    rpc GetAuthToken(GetAuthTokenReq) returns (AuthToken) {
+        option (google.api.http) = {
+            get: "/auth/tokens/{id}"
+        };
+    }
 
-    rpc FindAuthToken(FindAuthTokenReq) returns (FindAuthTokenResp) {}
+    rpc FindAuthToken(FindAuthTokenReq) returns (FindAuthTokenResp) {
+        option (google.api.http) = {
+            get: "/auth/tokens"
+        };
+    }
 
     rpc CountFindAuthToken(FindAuthTokenReq) returns (CountFindAuthTokenResp) {}
 
-    rpc InactiveAuthToken(InactiveAuthTokenReq) returns (InactiveAuthTokenResp) {}
+    rpc InactiveAuthToken(InactiveAuthTokenReq) returns (InactiveAuthTokenResp) {
+        option (google.api.http) = {
+            delete: "/auth/tokens/{id}/active"
+        };
+    }
 
     rpc ParseAuthToken(ParseAuthTokenReq) returns (AuthToken) {}
 }
