@@ -182,7 +182,7 @@ func (s *Repository) FindUser(ctx context.Context, args map[string]interface{}) 
         defer close(ch)
         
         tx := getFindUserDB(s.db, args)
-        err := tx.Find(&users).Error
+        err := tx.Order("id DESC").Find(&users).Error
         if err != nil {
             log.WithError(err).Error("Fail to find users")
             ch <- err
