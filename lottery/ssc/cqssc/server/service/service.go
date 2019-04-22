@@ -4,8 +4,6 @@ import (
 	"context"
     "time"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
     "github.com/golang/protobuf/ptypes"
 	log "github.com/sirupsen/logrus"
 

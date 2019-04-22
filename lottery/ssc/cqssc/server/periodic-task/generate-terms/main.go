@@ -130,26 +130,28 @@ func GetPeriodsByDate(dateStr string) []Period {
 	return ps
 }
 
-func createPeriodFunc(ctx context.Context, c pb.IssueServiceClient, req *pb.CreatePeriodReq) {
+func createTermFunc(ctx context.Context, c pb.CqsscServiceClient, req *pb.CreateTermReq) {
 	logger := log.WithField("id", req.Id)
-	if _, err := c.CreatePeriod(ctx, req); err != nil {
+	if _, err := c.CreateTerm(ctx, req); err != nil {
 		logger.Error(err)
 	} else {
-		logger.Info("create period success")
+		logger.Info("create term success")
 	}
 
 	wg.Done()
 	return
 }
 
-func createPeriodJob() {
+func createTermJob() {
+	log.Info("Create terms start")
+
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		log.Error(err)
 	}
 	defer conn.Close()
 
-	client := pb.NewIssueServiceClient(conn)
+	client := pb.NewCqsscServiceClient(conn)
 	ctx := context.Background()
 
 	// tomorrow
@@ -160,21 +162,24 @@ func createPeriodJob() {
 		// fmt.Printf("%v \n", p)
 		st, _ := ptypes.TimestampProto(p.Start)
 		et, _ := ptypes.TimestampProto(p.End)
-		req := pb.CreatePeriodReq{Id: p.Id, StartTime: st, EndTime: et}
-		go createPeriodFunc(ctx, client, &req)
+		req := pb.CreateTermReq{Id: p.Id, StartFrom: st, EndTo: et}
+		go createTermFunc(ctx, client, &req)
 	}
 	wg.Wait()
+	
+	log.Info("Create terms completed")
 }
 
 func main() {
-	// createPeriodJob()
+	p := "0 0 4 * * *"
 	c := cron.New()
-	c.AddFunc("0 0 4 * * *", func() {
-		log.Info("Create periods start")
-		go createPeriodJob()
-		log.Info("Create periods completed")
+	c.AddFunc(p, func() {
+		go createTermJob()
 	})
 	c.Start()
+
+	log.Info("Task starting")
+	log.Infof("Create ters on: %s", p)
 
 	select {}
 }
