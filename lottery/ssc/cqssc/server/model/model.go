@@ -77,7 +77,7 @@ type Term struct {
     StartFrom time.Time
     EndTo     time.Time
     Codes     pq.StringArray
-    OpenedAt  time.Time
+    OpenedAt  pq.NullTime
     SettledAt pq.NullTime
     RevokedAt pq.NullTime
 }

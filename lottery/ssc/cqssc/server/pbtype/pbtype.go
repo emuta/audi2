@@ -61,8 +61,10 @@ func TermProto(m *model.Term) *pb.Term {
 		p.EndTo = t
 	}
 
-	if t, err := ptypes.TimestampProto(m.OpenedAt); err == nil {
-		p.OpenedAt = t
+	if m.OpenedAt.Valid {
+		if t, err := ptypes.TimestampProto(m.OpenedAt.Time); err == nil {
+			p.OpenedAt = t
+		}
 	}
 
 	if m.SettledAt.Valid {
