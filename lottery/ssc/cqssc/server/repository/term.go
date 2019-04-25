@@ -213,7 +213,7 @@ func (s *Repository) SettleTerm(ctx context.Context, id int64) (*model.Term, err
 	go func() {
 		defer close(ch)
 
-		if err := tx.Take(&term).Error; err != nil {
+		if err := tx.Take(&term, "settled_at is null").Error; err != nil {
 			ch <- err
 			return
 		}
@@ -243,7 +243,7 @@ func (s *Repository) RevokeTerm(ctx context.Context, id int64) (*model.Term, err
 	go func() {
 		defer close(ch)
 
-		if err := tx.Take(&term).Error; err != nil {
+		if err := tx.Take(&term, "revoked_at is null").Error; err != nil {
 			ch <- err
 			return
 		}
