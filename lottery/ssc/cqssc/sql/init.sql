@@ -76,15 +76,15 @@ CREATE SCHEMA cqssc
         bet_id     bigint
     );
 
-CREATE VIEW play.vm_play AS (
+CREATE VIEW cqssc.vm_play AS (
     select 
         a.id,
         a.pr,
         (b.name || '/' || c.name || '/' || a.name) as name,
         (b.tag || '.' || c.tag || '.' || a.tag) as tag
-    from play.item a
-        join play.catg b on b.id=a.catg_id
-        join play.subcatg c on c.id=a.group_id
+    from cqssc.play a
+        join cqssc.catg b on b.id=a.catg_id
+        join cqssc.group c on c.id=a.group_id
     order by 
         a.id
 );
