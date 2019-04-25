@@ -63,7 +63,7 @@ CREATE SCHEMA cqssc
         bonus   numeric(20,4) default 0,
         times   integer default 1
     )
-    CREATE TABLE bet.plan_stats (
+    CREATE TABLE bet_plan_stats (
         id         bigint PRIMARY KEY,
         settled    boolean default false,
         settled_at timestamp without time zone,

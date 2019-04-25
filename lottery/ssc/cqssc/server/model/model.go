@@ -117,7 +117,7 @@ type BetPlan struct {
 }
 
 func (BetPlan) TableName() string {
-	return "cqssc.plan_plan"
+	return "cqssc.bet_plan"
 }
 
 func (p *BetPlan) AfterCreate(tx *gorm.DB) error {
