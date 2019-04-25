@@ -103,14 +103,14 @@ service CqsscService {
 
     rpc SetTermResult(SeTermtResultReq) returns (Term) {
         option (google.api.http) = {
-            post: "/terms/{id}"
+            post: "/terms/{id}/codes"
             body: "*"
         };
     }
 
     rpc UpdateTermResult(UpdateTermResultReq) returns (Term) {
         option (google.api.http) = {
-            patch: "/terms/{id}"
+            patch: "/terms/{id}/codes"
             body: "*"
         };
     }

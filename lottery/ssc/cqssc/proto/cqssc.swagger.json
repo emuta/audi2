@@ -725,7 +725,9 @@
         "tags": [
           "CqsscService"
         ]
-      },
+      }
+    },
+    "/terms/{id}/codes": {
       "post": {
         "operationId": "SetTermResult",
         "responses": {

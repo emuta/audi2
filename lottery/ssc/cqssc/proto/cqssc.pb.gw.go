@@ -1283,9 +1283,9 @@ var (
 
 	pattern_CqsscService_FindTerm_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"terms"}, ""))
 
-	pattern_CqsscService_SetTermResult_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"terms", "id"}, ""))
+	pattern_CqsscService_SetTermResult_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"terms", "id", "codes"}, ""))
 
-	pattern_CqsscService_UpdateTermResult_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"terms", "id"}, ""))
+	pattern_CqsscService_UpdateTermResult_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"terms", "id", "codes"}, ""))
 
 	pattern_CqsscService_SettleTerm_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"terms", "id", "settled"}, ""))
 

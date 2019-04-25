@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	log "github.com/sirupsen/logrus"
 
 	"audi/lottery/ssc/cqssc/server/model"
 )
@@ -49,58 +50,6 @@ func (s *Repository) GetTerm(ctx context.Context, id int64) (*model.Term, error)
 	return &p, nil
 }
 
-/*
-func (s *Repository) FindTerm(ctx context.Context, args map[string]interface{}) (*[]model.Term, error) {
-	var results []model.Term
-	ch := make(chan error)
-	go func() {
-		defer close(ch)
-
-		tx := s.db.Model(&model.Term{})
-
-		if id, ok := args["id"]; ok {
-			tx = tx.Where("id = ?", id)
-		}
-
-		if startFrom, ok := args["start_from"]; ok {
-			tx = tx.Where("start_from >= ?", startFrom)
-		}
-
-		if endTo, ok := args["end_to"]; ok {
-			tx = tx.Where("end_to <= ?", endTo)
-		}
-
-		if limit, ok := args["limit"]; ok {
-			tx = tx.Limit(limit)
-		}
-
-		if offset, ok := args["offset"]; ok {
-			tx = tx.Offset(offset)
-		}
-
-		if orderBy, ok := args["order_by"]; ok {
-			tx = tx.Order(orderBy)
-		} else {
-			tx = tx.Order("id DESC")
-		}
-
-		ch <- tx.Find(&results).Error
-
-	}()
-
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	case err := <-ch:
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return &results, nil
-}
-*/
-
 func (s *Repository) SetTermResult(ctx context.Context, id int64, codes []string) (*model.Term, error) {
 	term := model.Term{Id: id}
 
@@ -144,7 +93,18 @@ func (s *Repository) UpdateResult(ctx context.Context, id int64, codes []string)
 			return
 		}
 
-		ch <- tx.Model(&term).Update("codes = ?", codes).Error
+		if err := tx.Model(&term).Updates(map[string]interface{}{"codes": codes}).Error; err != nil {
+			log.WithError(err).Error("Failed to updated term codes")
+			ch <- err
+			return
+		}
+
+		log.WithFields(log.Fields{
+			"id":    id,
+			"codes": codes,
+		}).Info("Term codes updated success")
+
+		ch <- nil
 	}()
 
 	select {
@@ -258,7 +218,7 @@ func (s *Repository) SettleTerm(ctx context.Context, id int64) (*model.Term, err
 			return
 		}
 
-		ch <- tx.Model(&term).Update("settled_at = ?", time.Now()).Error
+		ch <- tx.Model(&term).Updates(map[string]interface{}{"settled_at": time.Now()}).Error
 	}()
 
 	select {
@@ -288,7 +248,7 @@ func (s *Repository) RevokeTerm(ctx context.Context, id int64) (*model.Term, err
 			return
 		}
 
-		ch <- tx.Model(&term).Update("revoked_at = ?", time.Now()).Error
+		ch <- tx.Model(&term).Updates(map[string]interface{}{"revoked_at": time.Now()}).Error
 	}()
 
 	select {
