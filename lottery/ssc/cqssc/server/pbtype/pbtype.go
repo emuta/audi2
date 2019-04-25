@@ -53,7 +53,7 @@ func PlayProto(m *model.Play) *pb.Play {
 func TermProto(m *model.Term) *pb.Term {
 	p := pb.Term{Id: m.Id, Codes: m.Codes}
 
-	if t, err := ptypes.TimestampProto(m.StartFrom); err != nil {
+	if t, err := ptypes.TimestampProto(m.StartFrom); err == nil {
 		p.StartFrom = t
 	}
 
