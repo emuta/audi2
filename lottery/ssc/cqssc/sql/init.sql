@@ -39,7 +39,7 @@ CREATE SCHEMA cqssc
         start_from timestamp without time zone,
         end_to timestamp without time zone,
         codes character varying[],
-        open_at timestamp without time zone,
+        opened_at timestamp without time zone,
         settled_at timestamp without time zone default null,
         revoked_at timestamp without time zone default null)
     CREATE TABLE bet (
