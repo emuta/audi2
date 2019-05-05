@@ -98,6 +98,7 @@ func (s *Repository) AuthLogin(ctx context.Context, name, passwd, device, ip, fp
 		if err := tx.Create(&auth).Error; err != nil {
 			log.Error("Failed to record auth history")
 			ch <- err
+			return
 		}
 
 		// create token
